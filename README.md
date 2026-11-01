@@ -1,5 +1,7 @@
 # lod-qaoa
 
+> **Winner of the first track, "Quantum Optimization", at IBM Qiskit Fall Fest 2026.**
+
 Choosing a level of detail (LOD) for each object in a 3D scene under a hard per-frame
 triangle budget, written as a QUBO and solved with QAOA (Qiskit), then compared honestly
 with exact dynamic programming, a greedy baseline and random sampling.
@@ -8,8 +10,21 @@ with exact dynamic programming, a greedy baseline and random sampling.
 
 <!-- RESULTS:START -->
 
-_No results yet. Run `make experiments`, then
-`uv run python scripts/results_table.py --write-readme` to fill this table._
+Scene `greedy_trap_1`, mean ± std over runs.
+
+| Method | AR top-1 | P_feas | Budget use | P_opt gain |
+|---|---:|---:|---:|---:|
+| DP | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 32768.000 ± 0.000 |
+| Greedy | 0.863 ± 0.000 | 1.000 ± 0.000 | 0.667 ± 0.000 | 0.000 ± 0.000 |
+| Random | 0.635 ± 0.000 | 0.001 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| QAOA-X p=1 | 0.446 ± 0.069 | 0.018 ± 0.001 | 0.778 ± 0.192 | 5.333 ± 9.238 |
+| QAOA-X p=2 | 0.664 ± 0.102 | 0.023 ± 0.001 | 1.000 ± 0.000 | 10.667 ± 4.619 |
+| QAOA-X p=3 | 0.605 ± 0.234 | 0.025 ± 0.002 | 0.889 ± 0.192 | 8.000 ± 8.000 |
+| QAOA-X p=4 | 0.716 ± 0.219 | 0.022 ± 0.002 | 1.000 ± 0.000 | 21.333 ± 12.220 |
+| QAOA-XY p=1 | 0.499 ± 0.083 | 0.465 ± 0.011 | 1.000 ± 0.000 | 146.667 ± 25.716 |
+| QAOA-XY p=2 | 0.565 ± 0.150 | 0.635 ± 0.006 | 1.000 ± 0.000 | 146.667 ± 32.332 |
+| QAOA-XY p=3 | 0.584 ± 0.243 | 0.696 ± 0.004 | 1.000 ± 0.000 | 216.000 ± 21.166 |
+| QAOA-XY p=4 | 0.571 ± 0.136 | 0.744 ± 0.009 | 1.000 ± 0.000 | 328.000 ± 40.000 |
 
 <!-- RESULTS:END -->
 
@@ -19,6 +34,109 @@ budget used by the best feasible sample divided by the available budget. P_opt g
 the probability of sampling the DP optimum divided by its probability under uniform
 sampling. DP and Greedy are deterministic, so their P_opt gain is 1 / P_opt(uniform)
 when they return the DP choice and 0 when they do not.
+
+The runs come from `configs/readme.yaml`: the three greedy trap scenes, X and XY mixers,
+p = 1..4, 3 seeds, 2 optimizer starts of at most 150 COBYLA iterations each and 4096
+shots, on the exact statevector simulator. To reproduce them, run
+`uv run python -m lodq.experiments --config configs/readme.yaml`, then
+`uv run python scripts/results_table.py --scene greedy_trap_1`.
+
+<details>
+<summary>The same table for <code>greedy_trap_2</code> and <code>greedy_trap_3</code></summary>
+
+Scene `greedy_trap_2`, mean ± std over runs.
+
+| Method | AR top-1 | P_feas | Budget use | P_opt gain |
+|---|---:|---:|---:|---:|
+| DP | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 32768.000 ± 0.000 |
+| Greedy | 0.866 ± 0.000 | 1.000 ± 0.000 | 0.800 ± 0.000 | 0.000 ± 0.000 |
+| Random | 0.576 ± 0.000 | 0.001 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| QAOA-X p=1 | 0.698 ± 0.161 | 0.015 ± 0.002 | 1.000 ± 0.000 | 10.667 ± 4.619 |
+| QAOA-X p=2 | 0.366 ± 0.063 | 0.018 ± 0.004 | 0.967 ± 0.058 | 2.667 ± 4.619 |
+| QAOA-X p=3 | 0.611 ± 0.255 | 0.021 ± 0.003 | 0.967 ± 0.058 | 5.333 ± 4.619 |
+| QAOA-X p=4 | 0.663 ± 0.264 | 0.023 ± 0.000 | 0.800 ± 0.200 | 2.667 ± 4.619 |
+| QAOA-XY p=1 | 0.727 ± 0.082 | 0.642 ± 0.010 | 1.000 ± 0.000 | 122.667 ± 36.074 |
+| QAOA-XY p=2 | 0.654 ± 0.171 | 0.808 ± 0.006 | 1.000 ± 0.000 | 74.667 ± 4.619 |
+| QAOA-XY p=3 | 0.579 ± 0.199 | 0.856 ± 0.006 | 1.000 ± 0.000 | 133.333 ± 32.332 |
+| QAOA-XY p=4 | 0.555 ± 0.165 | 0.866 ± 0.003 | 1.000 ± 0.000 | 130.667 ± 4.619 |
+
+Scene `greedy_trap_3`, mean ± std over runs.
+
+| Method | AR top-1 | P_feas | Budget use | P_opt gain |
+|---|---:|---:|---:|---:|
+| DP | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 32768.000 ± 0.000 |
+| Greedy | 0.869 ± 0.000 | 1.000 ± 0.000 | 0.833 ± 0.000 | 0.000 ± 0.000 |
+| Random | 0.610 ± 0.000 | 0.002 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| QAOA-X p=1 | 0.632 ± 0.226 | 0.015 ± 0.002 | 0.917 ± 0.083 | 2.667 ± 4.619 |
+| QAOA-X p=2 | 0.606 ± 0.098 | 0.021 ± 0.001 | 0.944 ± 0.048 | 0.000 ± 0.000 |
+| QAOA-X p=3 | 0.784 ± 0.092 | 0.019 ± 0.001 | 0.917 ± 0.083 | 2.667 ± 4.619 |
+| QAOA-X p=4 | 0.720 ± 0.091 | 0.021 ± 0.001 | 0.944 ± 0.048 | 2.667 ± 4.619 |
+| QAOA-XY p=1 | 0.624 ± 0.037 | 0.731 ± 0.003 | 1.000 ± 0.000 | 189.333 ± 46.876 |
+| QAOA-XY p=2 | 0.538 ± 0.115 | 0.857 ± 0.006 | 1.000 ± 0.000 | 117.333 ± 45.490 |
+| QAOA-XY p=3 | 0.724 ± 0.132 | 0.907 ± 0.003 | 1.000 ± 0.000 | 101.333 ± 30.288 |
+| QAOA-XY p=4 | 0.593 ± 0.115 | 0.856 ± 0.003 | 1.000 ± 0.000 | 213.333 ± 20.133 |
+
+</details>
+
+### Best quantum results
+
+- **The exact optimum in about 1 shot of 9.** Our best setting is the XY mixer at
+  p = 3, trained on CVaR (the best 10% of outcomes) instead of the mean energy. The demo
+  uses it. Along all 41 camera frames of the `greedy_trap_1` path it puts 11.6–11.7% of
+  the probability on the DP optimum. That is 28 times more often than a random
+  one-LOD-per-model plan (1 in 243) and about 3,800 times more often than a random
+  19-bit string. On the 21 frames where Greedy misses the optimum and reaches only
+  86–93% of it, QAOA still returns the optimum about once every 9 shots.
+- **CVaR training matters most.** With the mean energy as the objective, the XY mixer
+  puts at most 0.9% on the optimum (`greedy_trap_1`, p = 4). That is 291 times a
+  random bitstring, but only 2.2 times a random valid plan.
+- **Valid plans instead of noise.** The XY mixer never breaks the one-LOD-per-model rule,
+  and 47–91% of its shots also fit the budget (best: `greedy_trap_3`, p = 3, 90.5%).
+  The X mixer reaches 1.6–2.6%, and random bitstrings 0.1–0.2%.
+- **Every XY run sampled the optimum.** In all 36 XY runs (3 scenes × 3 seeds × p = 1..4)
+  the DP optimum is among the 4096 shots, so the best sample beats Greedy, which stops at
+  86–87% of the optimum on all three trap scenes. With the X mixer this happens in 19 of
+  36 runs.
+- **The most frequent answer is cautious.** On average the most frequent valid sample is
+  worth 37–78% of the optimum (best: QAOA-X at p = 3 on `greedy_trap_3`, 0.78), below
+  Greedy. One run did beat Greedy on this measure (QAOA-X, p = 1, `greedy_trap_3`,
+  seed 2: 0.89 against 0.87), but that is shot noise: its exact distribution gives 0.31.
+
+<p>
+  <img src="docs/images/results_feasibility.png" width="49%" alt="Share of feasible shots against depth p for the X and XY mixers on greedy_trap_1">
+  <img src="docs/images/results_amplification.png" width="49%" alt="How much more often QAOA samples the optimum than a random bitstring, against depth p, on greedy_trap_1">
+</p>
+
+`greedy_trap_1`, mean over 3 seeds, energy objective. "Chance" on the right is a uniformly
+random 19-bit string.
+
+## Demo
+
+![The 3D explorer: the game camera flies along its path and each model shows the level of detail it gets](docs/images/demo_explorer.gif)
+
+**3D explorer**, at about 2× speed. The game camera flies along its path. On every
+step the browser solves the budget problem again with DP and Greedy and swaps each model
+to its level of detail. The cards on the left score Greedy and both QAOA mixers against
+the optimum for the current frame.
+
+![Overview page: one camera frame of greedy_trap_1 with the level of detail of each model](docs/images/demo_overview.png)
+
+**Overview**: one camera frame as a 3D view. Switch between Optimal, Greedy, QAOA · X and
+QAOA · XY to see which level of detail each method picks, or press **Play** for a guided
+tour.
+
+![Quantum lab: the X and XY mixers on the same frame](docs/images/demo_lab.png)
+
+**Quantum lab**: the X and XY mixers on the same frame. With the X mixer 97% of the
+shots break the one-LOD-per-model rule. The XY mixer never breaks it and samples the
+optimum in 12% of the shots.
+
+![Offline render: Greedy keeps Lucy at LOD1, the DP optimum gives it LOD0](docs/images/render_greedy_vs_dp.png)
+
+**The greedy trap** (`make render`, `greedy_trap_1`). Greedy upgrades the dragon and
+Lucy to LOD1. After that no other upgrade fits, so it stops with 77% of the budget used.
+The optimum leaves the dragon coarse, gives Lucy LOD0 (48,420 triangles instead of
+19,368) and uses 98% of the budget.
 
 ## Method
 
@@ -126,7 +244,7 @@ python3.12 -m venv .venv
 `scripts/check_release.py` checks that the figures are newer than `runs/summary.csv` and
 that this README has its results block.
 
-### Demo
+### Demo pages
 
 The demo has four pages:
 
