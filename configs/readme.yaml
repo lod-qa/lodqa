@@ -1,0 +1,14 @@
+# Grid behind the README results: the scenes, mixers and depths of main.yaml with
+# fewer seeds and optimizer starts, so it finishes in well under an hour.
+name: readme
+scene_presets:
+  - greedy_trap_1
+  - greedy_trap_2
+  - greedy_trap_3
+p_list: [1, 2, 3, 4]
+mixers: [x, xy]
+seeds: [0, 1, 2]
+n_starts: 2
+maxiter: 150
+shots: 4096
+backend: fastsim
